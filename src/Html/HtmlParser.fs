@@ -15,7 +15,7 @@ open System.Runtime.InteropServices
 /// Represents an HTML attribute. The name is always normalized to lowercase
 type HtmlAttribute = 
 
-    internal | HtmlAttribute of name:string * value:string    
+    | HtmlAttribute of name:string * value:string    
 
     /// <summary>
     /// Creates an html attribute
@@ -29,10 +29,10 @@ type HtmlAttribute =
 /// Represents an HTML node. The names of elements are always normalized to lowercase
 type HtmlNode =
 
-    internal | HtmlElement of name:string * attributes:HtmlAttribute list * elements:HtmlNode list
-             | HtmlText of content:string
-             | HtmlComment of content:string
-             | HtmlCData of content:string
+    | HtmlElement of name:string * attributes:HtmlAttribute list * elements:HtmlNode list
+    | HtmlText of content:string
+    | HtmlComment of content:string
+    | HtmlCData of content:string
     
     /// <summary>
     /// Creates an html element
@@ -151,7 +151,7 @@ type HtmlNode =
 [<StructuredFormatDisplay("{_Print}")>]
 /// Represents an HTML document
 type HtmlDocument = 
-    internal | HtmlDocument of docType:string * elements:HtmlNode list
+    | HtmlDocument of docType:string * elements:HtmlNode list
   
     /// <summary>
     /// Creates an html document
@@ -182,7 +182,7 @@ type HtmlDocument =
 
 // --------------------------------------------------------------------------------------
 
-module private TextParser = 
+module TextParser = 
 
     let toPattern f c = if f c then Some c else None
 
@@ -196,7 +196,7 @@ module private TextParser =
 
 // --------------------------------------------------------------------------------------
 
-module internal HtmlParser =
+module HtmlParser =
 
     let wsRegex = lazy Regex("\\s+", RegexOptions.Compiled)
     let invalidTypeNameRegex = lazy Regex("[^0-9a-zA-Z_]+", RegexOptions.Compiled)
@@ -391,7 +391,7 @@ module internal HtmlParser =
             (!x.Content).Clear()
 
     // Tokenises a stream into a sequence of HTML tokens. 
-    let private tokenise reader =
+    let tokenise reader =
         let state = HtmlState.Create reader
         let rec data (state:HtmlState) =
             match state.Peek() with
@@ -739,7 +739,7 @@ module internal HtmlParser =
         
         !state.Tokens |> List.rev
 
-    let private parse reader =
+    let parse reader =
         let canNotHaveChildren (name:string) = 
             match name with
             | "area" | "base" | "br" | "col" | "embed"| "hr" | "img" | "input" | "keygen" | "link" | "menuitem" | "meta" | "param" 

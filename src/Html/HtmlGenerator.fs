@@ -14,23 +14,23 @@ open FSharp.Data.Runtime
 open FSharp.Data.Runtime.BaseTypes
 open FSharp.Data.Runtime.StructuralTypes
 
-module internal HtmlGenerator =
+module HtmlGenerator =
 
-    type private FieldInfo = 
+    type FieldInfo = 
       { /// The representation type that is part of the tuple we extract the field from
         TypeForTuple : Type
         /// The provided property corresponding to the field
         ProvidedProperty : ProvidedProperty
         Convert: Expr -> Expr }
 
-    let private getPropertyName = NameUtils.capitalizeFirstLetter
+    let getPropertyName = NameUtils.capitalizeFirstLetter
     
-    let private typeNameGenerator() =
+    let typeNameGenerator() =
         NameUtils.uniqueGenerator <| fun s ->
             HtmlParser.invalidTypeNameRegex.Value.Replace(s, " ")
             |> NameUtils.nicePascalName
 
-    let private createTableType getTableTypeName (inferenceParameters, missingValuesStr, cultureStr) (table:HtmlTable) = 
+    let createTableType getTableTypeName (inferenceParameters, missingValuesStr, cultureStr) (table:HtmlTable) = 
 
         let columns =  
             match table.InferedProperties with
@@ -86,7 +86,7 @@ module internal HtmlGenerator =
         
         create, tableType
 
-    let private createListType getListTypeName (inferenceParameters, missingValuesStr, cultureStr) (list:HtmlList) =
+    let createListType getListTypeName (inferenceParameters, missingValuesStr, cultureStr) (list:HtmlList) =
         
         let columns = HtmlInference.inferListType inferenceParameters list.Values
 
@@ -120,7 +120,7 @@ module internal HtmlGenerator =
         let listType = ProvidedTypeDefinition(getListTypeName list.Name, Some listTypeWithErasedType, hideObjectMethods = true, nonNullable = true)
         create, listType
 
-    let private createDefinitionListType getDefinitionListTypeName (inferenceParameters, missingValuesStr, cultureStr) (definitionList:HtmlDefinitionList) =
+    let createDefinitionListType getDefinitionListTypeName (inferenceParameters, missingValuesStr, cultureStr) (definitionList:HtmlDefinitionList) =
 
         let getListTypeName = typeNameGenerator()
 

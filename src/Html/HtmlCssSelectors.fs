@@ -4,7 +4,7 @@ open System
 open FSharp.Data
 open System.Runtime.CompilerServices
 
-module internal HtmlCssSelectors =
+module HtmlCssSelectors =
 
     type SelectorToken =
         | ClassPrefix of int
@@ -372,7 +372,7 @@ module CssSelectorExtensions =
     [<Extension>]
     type CssSelectorExtensions =
 
-        static member private Select nodes selector =
+        static member Select nodes selector =
             let tokenizer = CssSelectorTokenizer()
             match tokenizer.Tokenize selector with
             | [] -> []

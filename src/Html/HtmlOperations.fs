@@ -5,7 +5,7 @@ open FSharp.Data
 open System.Runtime.CompilerServices
 
 [<AutoOpen>]
-module private Utils =
+module Utils =
 
     let inline toLower (s:string) = s.ToLowerInvariant()
     let inline getNameSet names = names |> Seq.map toLower |> Set.ofSeq
@@ -68,7 +68,7 @@ module HtmlNode =
         let nameSet = getNameSet names
         n |> elements |> List.filter (name >> nameSet.Contains)
 
-    let private descendantsBy includeSelf recurseOnMatch predicate n = 
+    let descendantsBy includeSelf recurseOnMatch predicate n = 
         let rec descendantsBy includeSelf n = seq {
             let proceed = ref true
             if includeSelf && predicate n then
@@ -117,7 +117,7 @@ module HtmlNode =
         let nameSet = getNameSet names
         n |> descendantsAndSelf recurseOnMatch (name >> nameSet.Contains)
                 
-    let private descendantsByWithPath includeSelf recurseOnMatch predicate n = 
+    let descendantsByWithPath includeSelf recurseOnMatch predicate n = 
         let rec descendantsByWithPath includeSelf path n = seq {
             let proceed = ref true
             if includeSelf && predicate n then
@@ -220,7 +220,7 @@ module HtmlNode =
         let classesToLookFor = cssClass.Split [|' '|]
         classesToLookFor |> Array.forall (fun cssClass -> presentClasses |> Array.exists ((=) cssClass))
 
-    let private innerTextExcluding' recurse exclusions n = 
+    let innerTextExcluding' recurse exclusions n = 
         let exclusions = "style" :: "script" :: exclusions
         let isAriaHidden (n:HtmlNode) = 
             match tryGetAttribute "aria-hidden" n with
